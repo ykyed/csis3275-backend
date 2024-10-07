@@ -1,6 +1,6 @@
 package com.example.goshoes.request;
 
-public class ShoeRequest {
+public class ShoesRequest {
 
 	private String brand;
 	
