@@ -1,26 +1,62 @@
 package com.example.goshoes;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
-import com.example.goshoes.model.Shoes;
-import com.example.goshoes.model.ShoesRepository;
+import com.example.goshoes.model.ShoeDetailInfo;
+import com.example.goshoes.model.ShoeDetailInfoRepository;
+import com.example.goshoes.model.ShoeInfo;
+import com.example.goshoes.model.ShoeInfoRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class GoShoesApplication {
 
+	@Autowired
+    private ResourceLoader resourceLoader;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(GoShoesApplication.class, args);
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoesRepository repository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository) {
 		return args -> {
-			repository.save(new Shoes("CW2288-111", "Nike Air Force 1 '07 White / White - White", 150.00, "NIKE", "https://cdn.shopify.com/s/files/1/0577/7784/8502/products/cw2288111_nike_air_force_1_07_white_white_1_232x.jpg?v=1632233947"));
-			repository.save(new Shoes("JH9227", "adidas Handball Spezial JD Pink / Off White - Gum", 140.00, "ADIDAS", "//cdn.shopify.com/s/files/1/0577/7784/8502/files/JH9227_adidas_jd__handball_spezial_pink__off_white___gum_1_232x.jpg?v=1724234920"));
 			
+			Resource resource = resourceLoader.getResource("classpath:shoes_data.json");
+			InputStream inputStream = resource.getInputStream();
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(inputStream);
+			JsonNode shoesNode = jsonNode.get("shoes");
+			
+			for (JsonNode shoe : shoesNode) {
+	            String productCode = shoe.get("productCode").asText();
+	            String title = shoe.get("title").asText();
+	            Double price = shoe.get("price").asDouble();
+	            Double rating = shoe.get("rating").asDouble();
+	            int reviewCount = shoe.get("reviewCount").asInt();
+	            String color = shoe.get("color").asText();
+	            String style = shoe.get("style").asText();
+	            String brand = shoe.get("brand").asText();
+	            String thumbnail = shoe.get("thumbnail").asText();
+	            JsonNode imageNode = shoe.get("images");
+	            ArrayList<String> images = objectMapper.convertValue(imageNode, new TypeReference<ArrayList<String>>(){});
+	            
+	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail);
+	            shoeInfoRepository.save(shoeInfo);
+	            shoeDetailInfoRepository.save(new ShoeDetailInfo(shoeInfo, images));
+	            
+	        }
 		};
 	}
 }
