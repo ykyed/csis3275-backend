@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShoesRepository extends JpaRepository<Shoes, Long> {
+public interface ShoeInfoRepository extends JpaRepository<ShoeInfo, Long> {
 
-	List<Shoes> findAll();
+	List<ShoeInfo> findAll();
 	
-	Optional<Shoes> getShoesByBrand(String brand);
+	Optional<ShoeInfo> getShoesByBrand(String brand);
 }
