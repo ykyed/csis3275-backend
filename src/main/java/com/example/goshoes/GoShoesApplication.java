@@ -3,6 +3,8 @@ package com.example.goshoes;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import com.example.goshoes.controller.ShoeDetailInfoController;
 import com.example.goshoes.model.ShoeDetailInfo;
 import com.example.goshoes.model.ShoeDetailInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
@@ -22,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class GoShoesApplication {
 
+	private static final Logger logger = LoggerFactory.getLogger(GoShoesApplication.class);
+	
 	@Autowired
     private ResourceLoader resourceLoader;
 	
