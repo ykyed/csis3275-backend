@@ -26,7 +26,7 @@ public class ShoeDetailInfo {
 	
 	@ElementCollection
 	private List<String> images;
-	
+
 	public ShoeDetailInfo() {}
 	
 	public ShoeDetailInfo(ShoeInfo info, ArrayList<String> images) {

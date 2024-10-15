@@ -2,6 +2,7 @@ package com.example.goshoes;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import com.example.goshoes.model.ShoeDetailInfo;
 import com.example.goshoes.model.ShoeDetailInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
 import com.example.goshoes.model.ShoeInfoRepository;
+import com.example.goshoes.model.SizeInfo;
+import com.example.goshoes.model.SizeInfoRepository;
 import com.example.goshoes.model.UserInfo;
 import com.example.goshoes.model.UserInfoRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -40,7 +43,7 @@ public class GoShoesApplication {
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository) {
 		return args -> {
 			
 			Resource resource = resourceLoader.getResource("classpath:shoes_data.json");
@@ -65,10 +68,19 @@ public class GoShoesApplication {
 	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail);
 	            shoeInfoRepository.save(shoeInfo);
 	            shoeDetailInfoRepository.save(new ShoeDetailInfo(shoeInfo, images));
+	            
+	            // size
+	            double[] sizeArr = {3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13 };
+	            Random rand = new Random();
+	            
+	            for (int i = 0; i < sizeArr.length; i++) {
+	            	sizeRepository.save(new SizeInfo(shoeInfo, sizeArr[i], rand.nextInt(10)));
+	            }
 	        }
 			
 			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN"));
-			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER"));
+			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER"));			
+			
 		};
 	}
 }

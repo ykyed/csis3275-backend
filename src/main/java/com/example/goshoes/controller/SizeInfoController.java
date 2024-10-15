@@ -12,29 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.goshoes.model.UserInfo;
-import com.example.goshoes.model.UserInfoRepository;
+import com.example.goshoes.model.SizeInfoRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
-public class UserInfoController {
-
-	private static final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
+public class SizeInfoController {
+	
+private static final Logger logger = LoggerFactory.getLogger(SizeInfoController.class);
 	
 	@Autowired
-	UserInfoRepository repository;
+	SizeInfoRepository repository;
 	
-	@GetMapping("/admin/users")
-    public ResponseEntity<?> getAllUsers() {
-		
-		try {
-			List<UserInfo> userData = repository.findAll();
-			return new ResponseEntity<>(userData, HttpStatus.OK);
-		
-		} 
-		catch (Exception e) {
-		}
-		return null;
+	@GetMapping("/sizes")
+    public ResponseEntity<?> getAllColors() {
+        List<Double> sizes = repository.findDistinctSizes();
+        return new ResponseEntity<>(sizes, HttpStatus.OK);
     }
 }
