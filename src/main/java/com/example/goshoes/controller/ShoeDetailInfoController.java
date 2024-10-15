@@ -36,7 +36,6 @@ public class ShoeDetailInfoController {
     		
 			return new ResponseEntity<>(info, HttpStatus.OK);
 			
-
 		} catch (Exception e) {
 
 		}

@@ -47,27 +47,56 @@ public class ShoeInfoController {
 	}
 	
 	@GetMapping("/filter")
-	public ResponseEntity<?> getFilterShoes(@RequestParam(required = false) List<String> brands, @RequestParam(required = false) List<String> styles, @RequestParam(required = false) List<String> colors) {
+	public ResponseEntity<?> getFilterShoes(@RequestParam(required = false) List<String> brands, @RequestParam(required = false) List<String> styles, @RequestParam(required = false) List<String> colors, @RequestParam(required = false) List<Double> sizes) {
 
 		try {
-			if (brands != null && colors != null && styles != null) {
-				List<ShoeInfo> shoeData = repository.findByBrandInAndStyleInAndColorIn(brands, styles, colors);	
+			if (brands != null && colors != null && styles != null && sizes != null) {
+				List<ShoeInfo> shoeData = repository.findByBrandAndStyleAndColorAndSizeWithQualtity(brands, styles, colors, sizes);	
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        } 
+			
+			else if (brands != null && colors != null && styles != null ) {
+				List<ShoeInfo> shoeData = repository.findByBrandAndStyleAndColor(brands, styles, colors);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+			else if (brands != null && styles != null && sizes != null ) {
+				List<ShoeInfo> shoeData = repository.findByBrandAndStyleAndSizeWithQualtity(brands, styles, sizes);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        } 
+			else if (brands != null && colors != null && sizes != null ) {
+				List<ShoeInfo> shoeData = repository.findByBrandAndColorAndSizeWithQualtity(brands, colors, sizes);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+			else if (styles != null && colors != null && sizes != null ) {
+				List<ShoeInfo> shoeData = repository.findByStyleInAndColorInAndSizeWithQualtity(styles, colors, sizes);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+			
 			else if (brands != null && colors != null) {
-	        	List<ShoeInfo> shoeData = repository.findByBrandInAndColorIn(brands, colors);	
+	        	List<ShoeInfo> shoeData = repository.findByBrandAndColor(brands, colors);	
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        }
 	        else if (brands != null && styles != null) {
-	        	List<ShoeInfo> shoeData = repository.findByBrandInAndStyleIn(brands, styles);	
+	        	List<ShoeInfo> shoeData = repository.findByBrandAndStyle(brands, styles);	
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        }
-	        else if (colors != null && styles != null) {
-	        	List<ShoeInfo> shoeData = repository.findByStyleInAndColorIn(styles, colors);	
+	        else if (brands != null && sizes != null) {
+	        	List<ShoeInfo> shoeData = repository.findByBrandAndSizeWithQualtity(brands, sizes);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+	        else if (styles != null && colors != null) {
+	        	List<ShoeInfo> shoeData = repository.findByStyleAndColor(styles, colors);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+	        else if (styles != null && sizes != null) {
+	        	List<ShoeInfo> shoeData = repository.findByStyleAndSizeWithQualtity(styles, sizes);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+	        else if (colors != null && sizes != null) {
+	        	List<ShoeInfo> shoeData = repository.findByColorAndSizeWithQualtity(styles, sizes);	
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        }
 	        else if (brands != null) {
-	        	logger.info(brands.get(0));
 	        	List<ShoeInfo> shoeData = repository.findByBrandIn(brands);	
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        }
@@ -77,6 +106,11 @@ public class ShoeInfoController {
 	        }
 	        else if (colors != null) {
 	        	List<ShoeInfo> shoeData = repository.findByColorIn(colors);	
+				return new ResponseEntity<>(shoeData, HttpStatus.OK);
+	        }
+	        else if (sizes != null) {
+	        	List<ShoeInfo> shoeData = repository.findBySizeAndQuantity(sizes);
+	        	logger.info("size + " + shoeData.size());
 				return new ResponseEntity<>(shoeData, HttpStatus.OK);
 	        }
 	        else {
