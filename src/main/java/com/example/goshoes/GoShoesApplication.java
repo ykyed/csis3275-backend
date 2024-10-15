@@ -12,12 +12,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.goshoes.controller.ShoeDetailInfoController;
 import com.example.goshoes.model.ShoeDetailInfo;
 import com.example.goshoes.model.ShoeDetailInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
 import com.example.goshoes.model.ShoeInfoRepository;
+import com.example.goshoes.model.UserInfo;
+import com.example.goshoes.model.UserInfoRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,12 +32,15 @@ public class GoShoesApplication {
 	@Autowired
     private ResourceLoader resourceLoader;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(GoShoesApplication.class, args);
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository) {
 		return args -> {
 			
 			Resource resource = resourceLoader.getResource("classpath:shoes_data.json");
@@ -60,8 +65,10 @@ public class GoShoesApplication {
 	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail);
 	            shoeInfoRepository.save(shoeInfo);
 	            shoeDetailInfoRepository.save(new ShoeDetailInfo(shoeInfo, images));
-	            
 	        }
+			
+			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN"));
+			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER"));
 		};
 	}
 }
