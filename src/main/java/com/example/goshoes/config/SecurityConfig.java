@@ -53,13 +53,13 @@ public class SecurityConfig {
 //
 //
 //		return http.build();
-		http
-        .csrf().disable()
-        .authorizeRequests()
-        .requestMatchers("/api/login", "/api/signup").permitAll() // 로그인과 회원가입은 모두에게 허용
-        .anyRequest().authenticated()
-        .and()
-        .httpBasic();
+//		http
+//        .csrf().disable()
+//        .authorizeRequests()
+//        .requestMatchers("/api/login", "/api/signup").permitAll() // 로그인과 회원가입은 모두에게 허용
+//        .anyRequest().authenticated()
+//        .and()
+//        .httpBasic();
     
 		http
 	        .authorizeHttpRequests(authorize -> authorize
