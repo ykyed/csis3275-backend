@@ -28,6 +28,15 @@ public class UserInfo {
     
     @Column(nullable = false)
     private String role;
+    
+    @Column(nullable = false)
+    private String firstName;
+    
+    @Column(nullable = false)
+    private String lastName;
+    
+    @Column(nullable = false)
+    private String dob;  
 
 	public UserInfo() {}
     
