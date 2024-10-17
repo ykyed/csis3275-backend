@@ -28,13 +28,25 @@ public class UserInfo {
     
     @Column(nullable = false)
     private String role;
+    
+    @Column(nullable = false)
+    private String firstName;
+    
+    @Column(nullable = false)
+    private String lastName;
+    
+    @Column(nullable = false)
+    private String dob;  
 
 	public UserInfo() {}
     
-    public UserInfo(String email, String password, String role) {
+    public UserInfo(String email, String password, String role, String firstName, String lastName, String dob) {
     	this.email = email;
     	this.password = password;
     	this.role = role;
+    	this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
     }
     
     public Long getId() {
@@ -68,6 +80,32 @@ public class UserInfo {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	 public String getFirstName() {
+	        
+		 return firstName;
+	 }
+
+	 public void setFirstName(String firstName) {
+	       
+	    	this.firstName = firstName; 
+	 }
+
+	 public String getLastName() {
+	        return lastName; 
+	    }
+
+	 public void setLastName(String lastName) {
+	        this.lastName = lastName; 
+	    }
+
+	 public String getDob() {
+	        return dob; 
+	    }
+
+	 public void setDob(String dob) {
+	        this.dob = dob; 
+	    }
 	
 	public Collection<SimpleGrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority(this.role));
