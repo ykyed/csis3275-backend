@@ -1,7 +1,6 @@
 package com.example.goshoes.model;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -59,8 +58,5 @@ public interface ShoeInfoRepository extends JpaRepository<ShoeInfo, Long> {
 	
 	@Query("SELECT DISTINCT s.color FROM ShoeInfo s")
 	List<String> findDistinctColors();
-	
-	
-	
 }
 

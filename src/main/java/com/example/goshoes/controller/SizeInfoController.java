@@ -25,7 +25,7 @@ private static final Logger logger = LoggerFactory.getLogger(SizeInfoController.
 	SizeInfoRepository repository;
 	
 	@GetMapping("/sizes")
-    public ResponseEntity<?> getAllColors() {
+    public ResponseEntity<?> getAllSizes() {
         List<Double> sizes = repository.findDistinctSizes();
         return new ResponseEntity<>(sizes, HttpStatus.OK);
     }

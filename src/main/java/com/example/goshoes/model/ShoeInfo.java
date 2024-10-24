@@ -1,4 +1,5 @@
 package com.example.goshoes.model;
+
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -126,6 +127,4 @@ public class ShoeInfo {
 	public String getThumbnail() {
 		return thumbnail;
 	}
-	
-	
 }
