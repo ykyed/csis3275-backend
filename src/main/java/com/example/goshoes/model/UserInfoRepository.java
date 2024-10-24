@@ -8,6 +8,5 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>  {
 
 	List<UserInfo> findAll();
 	
-	//이메일로 사용자 찾
 	UserInfo findByEmail(String email);
 }
