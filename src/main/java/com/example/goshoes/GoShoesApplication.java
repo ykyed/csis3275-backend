@@ -78,8 +78,8 @@ public class GoShoesApplication {
 	            }
 	        }
 			
-			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN"));
-			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER"));			
+			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN","hyunhee","kim","19961221"));
+			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER","hyunhee","kim","19961221"));			
 			
 		};
 	}

@@ -38,9 +38,30 @@ public class UserInfoController {
 	
 	
 	// 회원가입 API
-    @PostMapping("/signup")
-    public String signup(@RequestBody UserInfo userInfo) {
+	@PostMapping("/signup")
+	public boolean signup(@RequestBody UserInfo userInfo) {
+	    logger.info(userInfo.getFirstName());
+
+	    // 이메일 중복 확인
+	    if (repository.findByEmail(userInfo.getEmail()) != null) {
+	        return false;  // 이미 존재하는 이메일인 경우 false 반환
+	    }
+
+	    // 비밀번호 암호화 후 저장
+	    userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+	    userInfo.setRole("USER");  // 기본 역할 설정
+	    repository.save(userInfo);
+	    return true;  // 성공적으로 등록되었을 경우 true 반환
+	}
+
+	
+	
+	
+    /*@PostMapping("/signup")
+    public String signup(@RequestBody UserInfo userInfo) {// string 대신에 boolean 으로 받을 수 있게
         
+    	logger.info(userInfo.getFirstName());
+    	
 		// 이메일 중복 확인
         if (repository.findByEmail(userInfo.getEmail()) != null) {
             return "User with this email already exists.";
@@ -50,7 +71,7 @@ public class UserInfoController {
         userInfo.setRole("USER"); // 기본 역할 설정
         repository.save(userInfo);
         return "User registered successfully";
-    }
+    }*/
 
     // 로그인 API
     @PostMapping("/login")
