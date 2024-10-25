@@ -17,8 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.goshoes.model.ReviewInfo;
 import com.example.goshoes.model.ReviewInfoRepository;
-import com.example.goshoes.model.ShoeDetailInfo;
-import com.example.goshoes.model.ShoeDetailInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
 import com.example.goshoes.model.ShoeInfoRepository;
 import com.example.goshoes.model.SizeInfo;
@@ -45,7 +43,7 @@ public class GoShoesApplication {
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository) {
 		return args -> {
 			
 			// add shoe info to DB
@@ -68,9 +66,8 @@ public class GoShoesApplication {
 	            JsonNode imageNode = shoe.get("images");
 	            ArrayList<String> images = objectMapper.convertValue(imageNode, new TypeReference<ArrayList<String>>(){});
 	            
-	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail);
+	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail, images);
 	            shoeInfoRepository.save(shoeInfo);
-	            shoeDetailInfoRepository.save(new ShoeDetailInfo(shoeInfo, images));
 	            
 	            // size
 	            double[] sizeArr = {3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13 };
@@ -96,7 +93,6 @@ public class GoShoesApplication {
 	            ReviewInfo reviewInfo = new ReviewInfo(productCode, title, comment, rating);
 	            reviewRepository.save(reviewInfo);
 	        }
-			
 			
 			// add user to DB
 			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN","hyunhee","kim","19961221"));

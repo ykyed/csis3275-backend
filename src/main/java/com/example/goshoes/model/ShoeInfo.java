@@ -1,8 +1,11 @@
 package com.example.goshoes.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,12 +33,15 @@ public class ShoeInfo {
 	private String brand;
 	private String thumbnail;
 	
-	@OneToMany(mappedBy = "shoeInfo")
+	@OneToMany(mappedBy = "shoeInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SizeInfo> sizes;
+	
+	@ElementCollection
+	private List<String> images;
 	
 	public ShoeInfo() {}
 	
-	public ShoeInfo(String productCode, String title, double price, double rating, int reviewCount, String color, String style, String brand, String thumbnail) {
+	public ShoeInfo(String productCode, String title, double price, double rating, int reviewCount, String color, String style, String brand, String thumbnail,  ArrayList<String> images) {
 		this.productCode = productCode;
 		this.title = title;
 		this.price = price;
@@ -45,6 +51,7 @@ public class ShoeInfo {
 		this.style = style;
 		this.brand = brand;
 		this.thumbnail = thumbnail;
+		this.images = images;
 	}
 	
 
@@ -126,5 +133,13 @@ public class ShoeInfo {
 	
 	public String getThumbnail() {
 		return thumbnail;
+	}
+	
+	public List<String> getImages() {
+		return images;
+	}
+
+	public void setImages(List<String> images) {
+		this.images = images;
 	}
 }
