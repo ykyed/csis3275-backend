@@ -15,6 +15,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.goshoes.model.ReviewInfo;
+import com.example.goshoes.model.ReviewInfoRepository;
 import com.example.goshoes.model.ShoeDetailInfo;
 import com.example.goshoes.model.ShoeDetailInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
@@ -43,16 +45,17 @@ public class GoShoesApplication {
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, ShoeDetailInfoRepository shoeDetailInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository) {
 		return args -> {
 			
+			// add shoe info to DB
 			Resource resource = resourceLoader.getResource("classpath:shoes_data.json");
 			InputStream inputStream = resource.getInputStream();
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(inputStream);
-			JsonNode shoesNode = jsonNode.get("shoes");
+			JsonNode node = jsonNode.get("shoes");
 			
-			for (JsonNode shoe : shoesNode) {
+			for (JsonNode shoe : node) {
 	            String productCode = shoe.get("productCode").asText();
 	            String title = shoe.get("title").asText();
 	            Double price = shoe.get("price").asDouble();
@@ -78,6 +81,24 @@ public class GoShoesApplication {
 	            }
 	        }
 			
+			// add review info to DB
+			resource = resourceLoader.getResource("classpath:review_data.json");
+			inputStream = resource.getInputStream();
+			jsonNode = objectMapper.readTree(inputStream);
+			node = jsonNode.get("review");
+			
+			for (JsonNode shoe : node) {
+	            String productCode = shoe.get("productCode").asText();
+	            String title = shoe.get("title").asText();
+	            String comment = shoe.get("comment").asText();
+	            Double rating = shoe.get("rating").asDouble();
+	            
+	            ReviewInfo reviewInfo = new ReviewInfo(productCode, title, comment, rating);
+	            reviewRepository.save(reviewInfo);
+	        }
+			
+			
+			// add user to DB
 			userRepository.save(new UserInfo("admin", passwordEncoder.encode("admin123"), "ROLE_ADMIN","hyunhee","kim","19961221"));
 			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("dan123"), "ROLE_CUSTOMER","hyunhee","kim","19961221"));			
 			

@@ -35,7 +35,8 @@ public class ShoeInfoController {
 			logger.info("ProductCode : "+ shoesData.get(0).getProductCode());
 			return new ResponseEntity<>(shoesData, HttpStatus.OK);
 		
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 		}
 		return null;
 
