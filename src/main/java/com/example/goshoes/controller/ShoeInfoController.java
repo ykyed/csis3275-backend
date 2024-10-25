@@ -175,4 +175,20 @@ public class ShoeInfoController {
 			return new ResponseEntity<>("Failed to deleteShoe.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	 @GetMapping("/shoes/{productCode}")
+    public ResponseEntity<?> getShoeDetailInfo(@PathVariable String productCode) {
+    	
+    	try {
+    		
+    		logger.info("ProductCode : "+ productCode);
+    		ShoeInfo info = repository.findByProductCode(productCode);
+    		
+			return new ResponseEntity<>(info, HttpStatus.OK);
+			
+		} catch (Exception e) {
+
+		}
+		return null;
+    }
 }
