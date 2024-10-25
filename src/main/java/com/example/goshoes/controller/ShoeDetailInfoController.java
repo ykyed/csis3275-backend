@@ -31,7 +31,6 @@ public class ShoeDetailInfoController {
     	try {
     		
     		logger.info("ProductCode : "+ productCode);
-    		
     		ShoeDetailInfo info = repository.findByShoeInfo_productCode(productCode);
     		
 			return new ResponseEntity<>(info, HttpStatus.OK);
