@@ -51,9 +51,9 @@ public class SecurityConfig {
         .csrf().disable()
         .headers(headers -> headers.frameOptions().disable())
         .authorizeRequests()
-            .requestMatchers("/login", "/api/auth/**").permitAll()
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().permitAll()
+            .requestMatchers("/login", "/api/**").permitAll()
+            .requestMatchers("/admin", "/admin/**").hasAuthority("ADMIN")
+            .anyRequest().authenticated()
            .and()
         .formLogin()  
             .usernameParameter("username") 
@@ -103,7 +103,7 @@ public class SecurityConfig {
     
     private AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
-            response.sendRedirect("/"); // 홈으로 리다이렉트
+            response.sendRedirect("/");
         };
     }
 }

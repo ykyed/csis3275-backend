@@ -3,6 +3,8 @@ package com.example.goshoes.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -32,9 +34,6 @@ public class ShoeInfo {
 	private String style;
 	private String brand;
 	private String thumbnail;
-	
-	@OneToMany(mappedBy = "shoeInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SizeInfo> sizes;
 	
 	@ElementCollection
 	private List<String> images;
@@ -142,4 +141,5 @@ public class ShoeInfo {
 	public void setImages(List<String> images) {
 		this.images = images;
 	}
+
 }

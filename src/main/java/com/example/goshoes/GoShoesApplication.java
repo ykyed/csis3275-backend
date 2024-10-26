@@ -74,7 +74,7 @@ public class GoShoesApplication {
 	            Random rand = new Random();
 	            
 	            for (int i = 0; i < sizeArr.length; i++) {
-	            	sizeRepository.save(new SizeInfo(shoeInfo, sizeArr[i], rand.nextInt(10)));
+	            	sizeRepository.save(new SizeInfo(productCode, sizeArr[i], rand.nextInt(10)));
 	            }
 	        }
 			
