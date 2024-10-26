@@ -9,4 +9,8 @@ public interface SizeInfoRepository extends JpaRepository<SizeInfo, Long> {
 
 	@Query("SELECT DISTINCT s.size FROM SizeInfo s")
 	List<Double> findDistinctSizes();
+	
+	void deleteByProductCode(String productCode);
+	
+	List<SizeInfo> findByProductCode(String productCode);
 }

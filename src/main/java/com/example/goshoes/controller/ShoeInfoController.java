@@ -22,8 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.goshoes.model.ReviewInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
 import com.example.goshoes.model.ShoeInfoRepository;
-import com.example.goshoes.model.ShoeInfoSpecifications;
+import com.example.goshoes.model.SizeInfo;
+import com.example.goshoes.model.SizeInfoRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import jakarta.transaction.Transactional;
 
 
@@ -39,6 +47,9 @@ public class ShoeInfoController {
 	
 	@Autowired
 	ReviewInfoRepository reviewRepository;
+	
+	@Autowired
+	SizeInfoRepository sizeRepository;
 	
 	@GetMapping("/shoes")
 	public ResponseEntity<?> getAllShoes() {
@@ -59,22 +70,46 @@ public class ShoeInfoController {
 	public ResponseEntity<?> getFilterShoes(@RequestParam(required = false) List<String> brands, @RequestParam(required = false) List<String> styles, @RequestParam(required = false) List<String> colors, @RequestParam(required = false) List<Double> sizes) {
 		try {
 			
-	        Specification<ShoeInfo> spec = Specification.where(null);
+	        Specification<ShoeInfo> shoeSpec = Specification.where(null);
 
 	        if (brands != null && !brands.isEmpty()) {
-	            spec = spec.and(ShoeInfoSpecifications.hasBrand(brands));
+	        	shoeSpec = shoeSpec.and((root, query, criteriaBuilder) -> {
+	        		return root.get("brand").in(brands);
+	        	});
 	        }
 	        if (styles != null && !styles.isEmpty()) {
-	            spec = spec.and(ShoeInfoSpecifications.hasStyle(styles));
+	        	shoeSpec = shoeSpec.and((root, query, criteriaBuilder) -> {
+	        		return root.get("style").in(styles);
+	        	});
 	        }
 	        if (colors != null && !colors.isEmpty()) {
-	            spec = spec.and(ShoeInfoSpecifications.hasColor(colors));
+	        	shoeSpec = shoeSpec.and((root, query, criteriaBuilder) -> {
+	        		return root.get("color").in(colors);
+	        	});
 	        }
 	        if (sizes != null && !sizes.isEmpty()) {
-	            spec = spec.and(ShoeInfoSpecifications.hasSizeAndQuantity(sizes));
+	        	
+	        	logger.info("sizes: "+ sizes);
+	        	shoeSpec = shoeSpec.and((root, query, criteriaBuilder) -> {
+	        		
+	                Subquery<String> sizeSubquery = query.subquery(String.class);	                
+	                Root<SizeInfo> sizeRoot = sizeSubquery.from(SizeInfo.class);               
+	              
+	                sizeSubquery.select(sizeRoot.get("productCode"))
+	                        .where(
+	                            sizeRoot.get("size").in(sizes),
+	                            criteriaBuilder.greaterThanOrEqualTo(sizeRoot.get("quantity"), 1)
+	                        );
+	                query.orderBy(criteriaBuilder.asc(root.get("id"))); 
+	                return criteriaBuilder.in(root.get("productCode")).value(sizeSubquery);
+	                
+	            });
+	        	logger.info("shoeSpec: "+ shoeSpec);
 	        }
-	        List<ShoeInfo> info = repository.findAll(spec);
 	        
+	        List<ShoeInfo> info = repository.findAll(shoeSpec);
+	        logger.info("getFilterShoes, size of shoe: "+ info.size());
+
 			return new ResponseEntity<>(info, HttpStatus.OK);
 		
 		} 
@@ -94,7 +129,6 @@ public class ShoeInfoController {
 			logger.info("Exception: "+ e.getMessage());
 			return new ResponseEntity<>("Failed to getAllBrands.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-        
     }
 	
 	@GetMapping("/styles")
@@ -121,8 +155,9 @@ public class ShoeInfoController {
 		}
     }
 	
-	@PostMapping("/shoes")
+	@PostMapping("/admin/shoes")
 	public ResponseEntity<?> addShoe(@RequestBody ShoeInfo shoeInfo) {
+		logger.info("addShoe shoeInfo: "+ shoeInfo.getProductCode());
 		try {
 			repository.save(shoeInfo);
 			return new ResponseEntity<>("Shoe added successfully", HttpStatus.CREATED);
@@ -133,9 +168,9 @@ public class ShoeInfoController {
 		}
 	}
 	
-	
-	@PutMapping("/shoes")
+	@PutMapping("/admin/shoes")
 	public ResponseEntity<?> updateShoe(@RequestBody ShoeInfo shoeInfo) {
+		logger.info("updateShoe shoeInfo: "+ shoeInfo.getProductCode());
 		try {
 			String productCode = shoeInfo.getProductCode();
 			
@@ -148,7 +183,6 @@ public class ShoeInfoController {
 			else {
 				return new ResponseEntity<>("Shoe not found", HttpStatus.NOT_FOUND);
 			}
-			
 		}
 		catch(Exception e) {
 			logger.info("Exception: "+ e.getMessage());
@@ -157,12 +191,13 @@ public class ShoeInfoController {
 	}
 	
 	@Transactional
-	@DeleteMapping("/shoes/{productCode}")
+	@DeleteMapping("/admin/shoes/{productCode}")
 	public ResponseEntity<?> deleteShoe(@PathVariable String productCode) {
+		logger.info("deleteShoe productCode: "+productCode);
 		
 		try {
 			if (repository.existsByProductCode(productCode)) {
-				
+				sizeRepository.deleteByProductCode(productCode);
 				reviewRepository.deleteByProductCode(productCode);
 				repository.deleteByProductCode(productCode);
 				return new ResponseEntity<>("Shoe delete successfully", HttpStatus.OK);

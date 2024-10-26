@@ -71,7 +71,7 @@ public class UserInfoController {
 //	    return new ResponseEntity<>("failed to login.", HttpStatus.UNAUTHORIZED);  
 //	}
 	
-	@GetMapping("/users")
+	@GetMapping("/admin/users")
     public ResponseEntity<?> getAllUsers() {
 		
 		try {

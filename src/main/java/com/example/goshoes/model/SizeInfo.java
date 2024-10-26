@@ -1,5 +1,7 @@
 package com.example.goshoes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,9 +16,7 @@ public class SizeInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "productCode", referencedColumnName = "productCode")
-    private ShoeInfo shoeInfo;
+	private String productCode;
 
     private double size;
     
@@ -24,8 +24,8 @@ public class SizeInfo {
 	
 	public SizeInfo() {}
 	
-	public SizeInfo(ShoeInfo shoeInfo, double size, int quantity) {
-		this.shoeInfo = shoeInfo;
+	public SizeInfo(String productCode, double size, int quantity) {
+		this.productCode = productCode;
 		this.size = size;
 		this.quantity = quantity;
 	}
@@ -38,12 +38,12 @@ public class SizeInfo {
 		this.id = id;
 	}
 
-	public ShoeInfo getShoeInfo() {
-		return shoeInfo;
+	public String getProductCode() {
+		return productCode;
 	}
 
-	public void setShoeInfo(ShoeInfo shoeInfo) {
-		this.shoeInfo = shoeInfo;
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 	public double getSize() {
@@ -60,5 +60,6 @@ public class SizeInfo {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+		
 	}
 }
