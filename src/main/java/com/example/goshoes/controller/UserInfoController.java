@@ -46,7 +46,7 @@ public class UserInfoController {
 	    try {
 	        // 비밀번호 암호화 후 저장
 	        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-	        userInfo.setRole("ROLE_USER"); // 기본 역할 설정
+	        userInfo.setRole("USER"); // 기본 역할 설정
 	        repository.save(userInfo);
 	        return new ResponseEntity<>(true, HttpStatus.OK); // 회원가입 성공 시 true 응답
 	    } catch (Exception e) {
