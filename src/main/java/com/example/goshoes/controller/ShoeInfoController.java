@@ -45,6 +45,7 @@ public class ShoeInfoController {
 
 		try {
 			List<ShoeInfo> shoesData = repository.findAll();
+			logger.info("" + shoesData);
 			return new ResponseEntity<>(shoesData, HttpStatus.OK);
 		
 		} 
