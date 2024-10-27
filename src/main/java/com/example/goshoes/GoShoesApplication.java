@@ -2,6 +2,7 @@ package com.example.goshoes;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -46,19 +47,33 @@ public class GoShoesApplication {
 	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository) {
 		return args -> {
 			
-			// add shoe info to DB
-			Resource resource = resourceLoader.getResource("classpath:shoes_data.json");
+			// add review info to DB
+			Resource resource = resourceLoader.getResource("classpath:review_data.json");
 			InputStream inputStream = resource.getInputStream();
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(inputStream);
-			JsonNode node = jsonNode.get("shoes");
+			JsonNode node = jsonNode.get("review");
 			
 			for (JsonNode shoe : node) {
 	            String productCode = shoe.get("productCode").asText();
 	            String title = shoe.get("title").asText();
-	            Double price = shoe.get("price").asDouble();
-	            Double rating = shoe.get("rating").asDouble();
-	            int reviewCount = shoe.get("reviewCount").asInt();
+	            String comment = shoe.get("comment").asText();
+	            double rating = shoe.get("rating").asDouble();
+	            
+	            ReviewInfo reviewInfo = new ReviewInfo(productCode, title, comment, rating);
+	            reviewRepository.save(reviewInfo);
+	        }
+						
+			// add shoe info to DB
+			resource = resourceLoader.getResource("classpath:shoes_data.json");
+			inputStream = resource.getInputStream();
+			jsonNode = objectMapper.readTree(inputStream);
+			node = jsonNode.get("shoes");
+			
+			for (JsonNode shoe : node) {
+	            String productCode = shoe.get("productCode").asText();
+	            String title = shoe.get("title").asText();
+	            double price = shoe.get("price").asDouble();
 	            String color = shoe.get("color").asText();
 	            String style = shoe.get("style").asText();
 	            String brand = shoe.get("brand").asText();
@@ -66,7 +81,15 @@ public class GoShoesApplication {
 	            JsonNode imageNode = shoe.get("images");
 	            ArrayList<String> images = objectMapper.convertValue(imageNode, new TypeReference<ArrayList<String>>(){});
 	            
-	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, rating, reviewCount, color, style, brand, thumbnail, images);
+	            List<ReviewInfo> reviewInfo = reviewRepository.findByProductCode(productCode);
+	            
+	            double totalRating = 0.0;
+	            int reviewCount = reviewInfo.size();
+	            for (int i = 0; i < reviewInfo.size(); i++) {
+	            	totalRating += reviewInfo.get(i).getRating();
+	            }
+	            
+	            ShoeInfo shoeInfo = new ShoeInfo(productCode, title, price, totalRating, reviewCount, color, style, brand, thumbnail, images);
 	            shoeInfoRepository.save(shoeInfo);
 	            
 	            // size
@@ -78,21 +101,7 @@ public class GoShoesApplication {
 	            }
 	        }
 			
-			// add review info to DB
-			resource = resourceLoader.getResource("classpath:review_data.json");
-			inputStream = resource.getInputStream();
-			jsonNode = objectMapper.readTree(inputStream);
-			node = jsonNode.get("review");
 			
-			for (JsonNode shoe : node) {
-	            String productCode = shoe.get("productCode").asText();
-	            String title = shoe.get("title").asText();
-	            String comment = shoe.get("comment").asText();
-	            Double rating = shoe.get("rating").asDouble();
-	            
-	            ReviewInfo reviewInfo = new ReviewInfo(productCode, title, comment, rating);
-	            reviewRepository.save(reviewInfo);
-	        }
 			
 			// add user to DB
 			userRepository.save(new UserInfo("admin@goshoes.com", passwordEncoder.encode("Admin123"), "ADMIN","admin","admin","2024-11-27"));

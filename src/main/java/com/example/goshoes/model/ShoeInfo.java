@@ -28,7 +28,7 @@ public class ShoeInfo {
 	
 	private String title;
 	private double price;
-	private double rating;
+	private double totalRating;
 	private int reviewCount;
 	private String color;
 	private String style;
@@ -40,11 +40,11 @@ public class ShoeInfo {
 	
 	public ShoeInfo() {}
 	
-	public ShoeInfo(String productCode, String title, double price, double rating, int reviewCount, String color, String style, String brand, String thumbnail,  ArrayList<String> images) {
+	public ShoeInfo(String productCode, String title, double price, double totalRating, int reviewCount, String color, String style, String brand, String thumbnail,  ArrayList<String> images) {
 		this.productCode = productCode;
 		this.title = title;
 		this.price = price;
-		this.rating = rating;
+		this.totalRating = totalRating;
 		this.reviewCount = reviewCount;
 		this.color = color;
 		this.style = style;
@@ -87,11 +87,11 @@ public class ShoeInfo {
 	}	
 
 	public double getRating() {
-		return rating;
+		return totalRating / reviewCount;
 	}
 
 	public void setRating(double rating) {
-		this.rating = rating;
+		this.totalRating += rating;
 	}
 
 	public int getReviewCount() {
