@@ -8,5 +8,5 @@ public interface CartInfoRepository extends JpaRepository<CartInfo, Long> {
 	
 	List<CartInfo> findByUserEmail(String userEmail);
 	
-	void deleteAllByUserEmail(String userEmail);
+	void deleteByUserEmail(String userEmail);
 }

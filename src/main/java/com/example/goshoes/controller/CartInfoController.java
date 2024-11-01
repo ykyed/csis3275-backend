@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.goshoes.model.CartInfo;
 import com.example.goshoes.model.CartInfoRepository;
 
+import jakarta.transaction.Transactional;
+
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
@@ -76,6 +78,7 @@ public class CartInfoController {
 		 }
 	 }
 	 
+	 
 	 @PutMapping("/cart")
 	 public ResponseEntity<?> updateItem(@RequestBody CartInfo cartInfo) {
 		 
@@ -91,11 +94,12 @@ public class CartInfoController {
 		 }
 	 }
 	 
-	 @DeleteMapping("/cart")
+	 @Transactional
+	 @DeleteMapping("/cart/user/{userEmail}")
 	 public ResponseEntity<?> deleteItems(@PathVariable String userEmail) {
 		 
 		 try {
-			 repository.deleteAllByUserEmail(userEmail);
+			 repository.deleteByUserEmail(userEmail);
 			 return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
 	 
 		 } 
