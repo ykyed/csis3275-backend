@@ -53,7 +53,7 @@ public class SecurityConfig {
         .authorizeRequests()
             .requestMatchers("/login", "/api/**").permitAll()
             .requestMatchers("/admin", "/admin/**").hasAuthority("ADMIN")
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
            .and()
         .formLogin()  
             .usernameParameter("username") 

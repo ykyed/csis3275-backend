@@ -16,6 +16,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.goshoes.model.CartInfo;
+import com.example.goshoes.model.CartInfoRepository;
 import com.example.goshoes.model.ReviewInfo;
 import com.example.goshoes.model.ReviewInfoRepository;
 import com.example.goshoes.model.ShoeInfo;
@@ -44,7 +46,7 @@ public class GoShoesApplication {
 	}
 	
 	@Bean
-	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository) {
+	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository, CartInfoRepository cartRepository) {
 		return args -> {
 			
 			// add review info to DB
@@ -101,11 +103,14 @@ public class GoShoesApplication {
 	            }
 	        }
 			
-			
-			
 			// add user to DB
 			userRepository.save(new UserInfo("admin@goshoes.com", passwordEncoder.encode("Admin123"), "ADMIN","admin","admin","2024-11-27"));
-			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("Qwer1234"), "USER","Dan","Do","2024-11-28"));			
+			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("Qwer1234"), "USER","Dan","Do","2024-11-28"));
+			
+			// test
+			cartRepository.save(new CartInfo("wooastudio1012@gmail.com", "CW2288-111", 10.5, 2));
+			cartRepository.save(new CartInfo("wooastudio1012@gmail.com", "JH9227", 11, 8));
+			
 		};
 	}
 }

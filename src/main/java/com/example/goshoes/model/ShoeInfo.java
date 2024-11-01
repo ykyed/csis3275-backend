@@ -87,7 +87,7 @@ public class ShoeInfo {
 	}	
 
 	public double getRating() {
-		return totalRating / reviewCount;
+		return Double.parseDouble(String.format("%.1f", totalRating / reviewCount));
 	}
 
 	public void setRating(double rating) {
