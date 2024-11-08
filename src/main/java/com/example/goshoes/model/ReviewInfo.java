@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "REVIEW_INFO")//추가해
+@Table(name="reviewInfo")
 public class ReviewInfo {
 
 	@Id
