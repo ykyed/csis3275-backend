@@ -3,22 +3,23 @@ package com.example.goshoes.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="shoeInfo")
 public class ShoeInfo {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(ShoeInfo.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -87,7 +88,8 @@ public class ShoeInfo {
 	}	
 
 	public double getRating() {
-		return Double.parseDouble(String.format("%.1f", totalRating / reviewCount));
+		double result = Double.parseDouble(String.format("%.1f", totalRating / reviewCount)); 
+		return result;
 	}
 
 	public void setRating(double rating) {

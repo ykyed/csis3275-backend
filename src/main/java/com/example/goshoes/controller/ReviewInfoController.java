@@ -62,6 +62,7 @@ public class ReviewInfoController {
 	 public ResponseEntity<?> addReview(@RequestBody ReviewInfo reviewInfo) {
 	 	
 		 try {
+			 logger.info("addReview : "+ reviewInfo.getRating());
 			 eventPublisher.publishEvent(new AddReviewEvent(reviewInfo.getProductCode(), reviewInfo.getRating()));
 			 repository.save(reviewInfo);
 			 return new ResponseEntity<>("Review added successfully", HttpStatus.CREATED);

@@ -38,38 +38,20 @@ public class UserInfoController {
 	public ResponseEntity<Boolean> signup(@RequestBody UserInfo userInfo) {
 	    logger.info(userInfo.getFirstName());
 
-	    // 이메일 중복 확인
 	    if (repository.findByEmail(userInfo.getEmail()) != null) {
-	        return new ResponseEntity<>(false, HttpStatus.CONFLICT); // 이메일 중복 시 false 응답
+	        return new ResponseEntity<>(false, HttpStatus.CONFLICT);
 	    }
 
 	    try {
-	        // 비밀번호 암호화 후 저장
 	        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-	        userInfo.setRole("USER"); // 기본 역할 설정
+	        userInfo.setRole("USER");
 	        repository.save(userInfo);
-	        return new ResponseEntity<>(true, HttpStatus.OK); // 회원가입 성공 시 true 응답
+	        return new ResponseEntity<>(true, HttpStatus.OK);
 	    } catch (Exception e) {
 	        logger.error("Error occurred during signup", e);
-	        return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR); // 서버 에러 발생 시 false 응답
+	        return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
-
-	
-//	@PostMapping("/login")
-//	public ResponseEntity<?> login(@RequestBody UserInfo loginUser) {
-//		logger.info("login:" + loginUser);
-//	    UserInfo user = repository.findByEmail(loginUser.getEmail());
-//
-//	    // 이메일이 존재하고 비밀번호가 일치할 경우 로그인 성공
-//	    if (user != null && passwordEncoder.matches(loginUser.getPassword(), user.getPassword())) {
-//	    	user.setPassword(null);
-//	        return new ResponseEntity<>(user, HttpStatus.OK);  
-//	    }
-//
-//	    // 이메일 또는 비밀번호가 일치하지 않을 경우 로그인 실패
-//	    return new ResponseEntity<>("failed to login.", HttpStatus.UNAUTHORIZED);  
-//	}
 	
 	@GetMapping("/admin/users")
     public ResponseEntity<?> getAllUsers() {
@@ -96,6 +78,7 @@ public class UserInfoController {
 	                                         .map(auth -> auth.getAuthority().replace("ROLE_", ""))
 	                                         .orElse("USER");
 	            String username = authentication.getName();
+	            logger.info("username:" + username);
 	            String firstName = repository.findByEmail(username).getFirstName();
 	            Map<String, String> info = Map.of("username", username, "role", role, "name", firstName);
 	            return new ResponseEntity<>(info, HttpStatus.OK);
@@ -109,7 +92,6 @@ public class UserInfoController {
 			logger.info("e:" + e.getMessage());
 			return new ResponseEntity<>("Failed to getCurrentUserInfo.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
     }
 }
 

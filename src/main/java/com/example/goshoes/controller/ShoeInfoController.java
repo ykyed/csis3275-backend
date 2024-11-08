@@ -232,7 +232,8 @@ public class ShoeInfoController {
 	
 	@EventListener
 	public void handleAddReviewEvent(AddReviewEvent event) {
-		repository.findByProductCode(event.getProductCode()).setRating(event.getRating());
-		
+		ShoeInfo shoe = repository.findByProductCode(event.getProductCode()); 
+		shoe.setRating(event.getRating());
+		shoe.setReviewCount(shoe.getReviewCount() + 1);
 	}
 }
