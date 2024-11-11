@@ -88,7 +88,11 @@ public class ShoeInfo {
 	}	
 
 	public double getRating() {
+		if (totalRating == 0) {
+			return 0;
+		}
 		double result = Double.parseDouble(String.format("%.1f", totalRating / reviewCount)); 
+		logger.info("ShoeInfo, getrating: " + result);
 		return result;
 	}
 
