@@ -49,7 +49,7 @@ public class GoShoesApplication {
 	ApplicationRunner init(ShoeInfoRepository shoeInfoRepository, UserInfoRepository userRepository, SizeInfoRepository sizeRepository, ReviewInfoRepository reviewRepository, CartInfoRepository cartRepository) {
 		return args -> {
 			
-			// add review info to DB
+			// add initial review info into the DB
 			Resource resource = resourceLoader.getResource("classpath:review_data.json");
 			InputStream inputStream = resource.getInputStream();
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -66,7 +66,7 @@ public class GoShoesApplication {
 	            reviewRepository.save(reviewInfo);
 	        }
 						
-			// add shoe info to DB
+			// add initial shoe info into the DB
 			resource = resourceLoader.getResource("classpath:shoes_data.json");
 			inputStream = resource.getInputStream();
 			jsonNode = objectMapper.readTree(inputStream);
@@ -103,14 +103,9 @@ public class GoShoesApplication {
 	            }
 	        }
 			
-			// add user to DB
+			// add initial user info into the DB
 			userRepository.save(new UserInfo("admin@goshoes.com", passwordEncoder.encode("Admin123"), "ADMIN","admin","admin","2024-11-27"));
-			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("Qwer1234"), "USER","Dan","Do","2024-11-28"));
-			
-			// test
-			cartRepository.save(new CartInfo("wooastudio1012@gmail.com", "CW2288-111", 10.5, 2));
-			cartRepository.save(new CartInfo("wooastudio1012@gmail.com", "JH9227", 11, 8));
-			
+			userRepository.save(new UserInfo("wooastudio1012@gmail.com", passwordEncoder.encode("Qwer1234"), "USER","Dan","Do","2024-11-28"));			
 		};
 	}
 }
