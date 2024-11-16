@@ -157,7 +157,7 @@ public class ShoeInfoController {
 		logger.info("addShoe shoeInfo: "+ shoeInfo.getProductCode());
 		try {
 			repository.save(shoeInfo);
-			return new ResponseEntity<>("Shoe added successfully", HttpStatus.CREATED);
+			return new ResponseEntity<>(shoeInfo.getId(), HttpStatus.CREATED);
 		}
 		catch(Exception e) {
 			logger.info("Exception: "+ e.getMessage());
@@ -185,6 +185,7 @@ public class ShoeInfoController {
 			logger.info("Exception: "+ e.getMessage());
 			return new ResponseEntity<>("Failed to updateShoe.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
 	}
 	
 	@Transactional

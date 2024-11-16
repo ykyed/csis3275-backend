@@ -37,6 +37,7 @@ public class ShoeInfo {
 	private String thumbnail;
 	
 	@ElementCollection
+	@Column(length = 2000)
 	private List<String> images;
 	
 	public ShoeInfo() {}

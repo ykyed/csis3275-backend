@@ -47,7 +47,7 @@ private static final Logger logger = LoggerFactory.getLogger(SizeInfoController.
 	@PutMapping("admin/sizes/{productCode}")
 	public ResponseEntity<?> updateSizes(@PathVariable String productCode, @RequestBody List<SizeInfo> infos) {
 		 
-		logger.info("updateSizes sizeInfo: "+ infos.get(0).getProductCode());
+		logger.info("updateSizes sizeInfo: "+ infos.size());
 		
 		List<SizeInfo> existingSizes = repository.findByProductCode(productCode);
 		
