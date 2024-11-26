@@ -16,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.goshoes.model.CartInfo;
 import com.example.goshoes.model.CartInfoRepository;
 import com.example.goshoes.model.ReviewInfo;
 import com.example.goshoes.model.ReviewInfoRepository;
@@ -84,8 +83,9 @@ public class GoShoesApplication {
 	            ArrayList<String> images = objectMapper.convertValue(imageNode, new TypeReference<ArrayList<String>>(){});
 	            
 	            List<ReviewInfo> reviewInfo = reviewRepository.findByProductCode(productCode);
-	            
+
 	            double totalRating = 0.0;
+	       
 	            int reviewCount = reviewInfo.size();
 	            for (int i = 0; i < reviewInfo.size(); i++) {
 	            	totalRating += reviewInfo.get(i).getRating();
